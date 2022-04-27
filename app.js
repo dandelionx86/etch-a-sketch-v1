@@ -1,38 +1,37 @@
 document.addEventListener("DOMContentLoaded", function listen() {
   const container = document.querySelector(".container");
-  // let btnElements = document.querySelectorAll(".gridControls");
   let clearGridBtn = document.querySelector(".clearBtn");
   let submitBtnElement = document.querySelector("#submitBtn");
-
-  // for (let btnElement of btnElements) {
-  //   btnElement.addEventListener("click", (event) => gridSize(event));
-  // }
+  let click = true;
 
   submitBtnElement.addEventListener("click", () => freeResponse());
   clearGridBtn.addEventListener("click", () => resetGrid());
+  document.querySelector(".container").addEventListener("click", (e) => {
+    if (e.target.tagName != "BUTTON") {
+      click = !click;
+    }
+  });
 
-  // function gridSize(event) {
-  //   const currentBtnElement = event.target;
-  //   // if (currentBtnElement.classList.contains("10x10")) {
-  //   //   console.log("10x10 clicked");
-  //   //   resetGrid();
-  //   //   createGrid(10, 10);
-  //   // } else if (currentBtnElement.classList.contains("16x16")) {
-  //   //   console.log("16x16 clicked");
-  //   //   resetGrid();
-  //   //   createGrid(16, 16);
-  //   // } else if (currentBtnElement.classList.contains("24x24")) {
-  //   //   console.log("24x24 clicked");
-  //   //   resetGrid();
-  //   //   createGrid(24, 24);
-  //   // } else if (currentBtnElement.classList.contains("clearBtn")) {
-  //   //   resetGrid();
-  //   // }
+  function createGrid(size) {
+    for (let i = 0; i < size * size; i++) {
+      const gridElement = document.createElement("div");
 
-  //   if (currentBtnElement.classList.contains("clearBtn")) {
-  //     resetGrid;
-  //   }
-  // }
+      container.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
+      container.style.gridTemplateRows = `repeat(${size}, 1fr)`;
+      container.appendChild(gridElement).classList.add("box");
+
+      gridElement.addEventListener("mouseover", () => {
+        if (click) {
+          gridElement.style.backgroundColor = "black";
+        }
+      });
+    }
+  }
+
+  function resetGrid() {
+    const boxes = container.querySelectorAll(".box");
+    boxes.forEach((box) => box.remove());
+  }
 
   function freeResponse() {
     let answerInputElement = document.querySelector("#freeResponse");
@@ -46,25 +45,10 @@ document.addEventListener("DOMContentLoaded", function listen() {
       createGrid(x);
     }
   }
-
-  function createGrid(size) {
-    for (let i = 0; i < size * size; i++) {
-      const gridElement = document.createElement("div");
-
-      container.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
-      container.style.gridTemplateRows = `repeat(${size}, 1fr)`;
-      container.appendChild(gridElement).classList.add("box");
-
-      // gridElement.style.border = "1px solid black";
-
-      gridElement.addEventListener("mouseover", () => {
-        gridElement.style.backgroundColor = "black";
-      });
-    }
-  }
-
-  function resetGrid() {
-    const boxes = container.querySelectorAll(".box");
-    boxes.forEach((box) => box.remove());
-  }
 });
+
+// When clear button is clicked, the boxes/gridElements turn white but do not appear to be
+// completely removed. However, you cannot begin sketching again until the submit button is
+// clicked with an appropriate number as the input.
+// QUESTION: How do I clear the applied color, but keep the current grid when the clear button is pressed?
+// QUESTION: How do I reset the grid completely, including the input field?
